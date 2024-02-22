@@ -54,3 +54,23 @@
 .load-more:hover {
   background: #36299de6;
 }
+
+/* loading page css code */
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #263038;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.loading-message {
+  color: white;
+  font-size: 24px;
+}

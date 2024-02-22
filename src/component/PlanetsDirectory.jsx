@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import ResidentList from "./ResidentList";
+import LoadingOverlay from "./LoadingOverlay";
 const PlanetsDirectory = () => {
   const [planets, setPlanets] = useState([]);
   const [nextPage, setNextPage] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchPlanets = async () => {
@@ -13,7 +15,7 @@ const PlanetsDirectory = () => {
         const data = await response?.json();
         setPlanets(data?.results);
         setNextPage(data?.next);
-        console.log(data?.next);
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching planets:", error);
       }
@@ -38,7 +40,24 @@ const PlanetsDirectory = () => {
   return (
     <div className="planets-directory">
       <h1>Planets Directory</h1>
-      <div className="planet-cards">
+
+      {isLoading ? ( // Check if data is still loading
+        <LoadingOverlay />
+      ) : (
+        <div className="planet-cards">
+          {planets.map((planet, index) => (
+            <div className="planet-card" key={index}>
+              <h2>{planet?.name}</h2>
+              <p>Climate: {planet?.climate}</p>
+              <p>Population: {planet?.population}</p>
+              <p>Terrain: {planet?.terrain}</p>
+              <ResidentList residentsUrls={planet?.residents} />
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* <div className="planet-cards">
         {planets.map((planet, index) => (
           <div className="planet-card" key={index}>
             <h2>{planet?.name}</h2>
@@ -48,7 +67,7 @@ const PlanetsDirectory = () => {
             <ResidentList residentsUrls={planet?.residents} />
           </div>
         ))}
-      </div>
+      </div> */}
       {nextPage && (
         <button className="load-more" onClick={fetchNextPage}>
           Load More
